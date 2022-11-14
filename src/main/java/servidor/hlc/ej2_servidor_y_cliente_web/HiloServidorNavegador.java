@@ -39,21 +39,23 @@ public class HiloServidorNavegador extends Thread {
 
         try {
             
-            //String url = getHeaderToArray(flujoEntrada).split("\r\n")[11];
+            /*
+            String url = getHeaderToArray(flujoEntrada).split("\r\n")[11];
             
-            //if(url.contains("https://") || url.contains("http://")){
+            if(url.contains("https://") || url.contains("http://")){
                 
-                //String[] listaUrl = url.trim().split("/");
+                String[] listaUrl = url.trim().split("/");
             
-                //String archivo = "";
+                String archivo = "";
 
-                //for(int i = 3; i < listaUrl.length; i++){
-                    //archivo += "\\" + listaUrl[i];
-                //}
+                for(int i = 3; i < listaUrl.length; i++){
+                    archivo += "\\" + listaUrl[i];
+                }
                 
-                //File file = new File("C:\\Users\\Dam\\Desktop" + archivo);
+                File file = new File("C:\\Users\\Dam\\Desktop" + archivo);
+                */
                 
-                File file = new File("C:\\Users\\Dam\\Desktop\\index.html");
+                File file = new File("C:\\Users\\Nitro\\Desktop\\index.html");
                 
                 if (file.exists()) {
 

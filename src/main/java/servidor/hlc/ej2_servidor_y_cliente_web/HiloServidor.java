@@ -61,8 +61,8 @@ public class HiloServidor extends Thread {
             if(urlCliente.contains("GET") && (urlCliente.contains("http://") || urlCliente.contains("https://"))){
                 
             
-                File file = new File("C:\\Users\\Dam\\Desktop" + archivo);
-                System.out.println("ENTRA");
+                File file = new File("C:\\Users\\Nitro\\Desktop" + archivo);
+                
                 if(file.exists()){
                     
                     Scanner scanner = null;
