@@ -4,6 +4,7 @@
  */
 package servidor.hlc.ej2_servidor_y_cliente_web;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -38,58 +39,85 @@ public class HiloServidorNavegador extends Thread {
     public void run() {
 
         try {
+
+            InputStreamReader entrada = new InputStreamReader(flujoEntrada);
+            BufferedReader reader = new BufferedReader(entrada);
+            String line = reader.readLine();
+            System.out.println(line);
+            String[] lineas = line.split("/");
             
-            /*
-            String url = getHeaderToArray(flujoEntrada).split("\r\n")[11];
-            
-            if(url.contains("https://") || url.contains("http://")){
+            line = "";
+            for(int i = 1; i < lineas.length; i++){
                 
-                String[] listaUrl = url.trim().split("/");
-            
-                String archivo = "";
-
-                for(int i = 3; i < listaUrl.length; i++){
-                    archivo += "\\" + listaUrl[i];
-                }
-                
-                File file = new File("C:\\Users\\Dam\\Desktop" + archivo);
-                */
-                
-                File file = new File("C:\\Users\\Nitro\\Desktop\\index.html");
-                
-                if (file.exists()) {
-
-                    Scanner scanner = new Scanner(file);
-                    scanner.useDelimiter(",\\s*");
-
-                    StringBuilder linea = new StringBuilder();
-                    while (scanner.hasNextLine()) {
-                        linea.append(scanner.nextLine() + "\r\n");
-                    }
-
-                    String httpResponse
-                            = "HTTP/1.1 200 OK\r\n"
-                            + "Content-Length: " + linea.toString().getBytes().length
-                            + "\r\nContent-Type: text/html; charset=utf-8"
-                            + "Server: ServidorWebPropio\r\n"
-                            + "Date: " + new Date()
-                            + "\r\n\r\n" + linea.toString() + "\r\n\r\n";
-
-                    flujoSalida.write(httpResponse.getBytes("UTF-8"));
+                if(lineas[i].contains(" HTTP")){
+                    line += "\\" + lineas[i].substring(0, lineas[i].length() - 5);
+                    break;
                 } else {
-                    String linea = "<h1>Error: 404</h1>";
-                    String httpResponse
-                            = "HTTP/1.1 200 OK\r\n"
-                            + "Content-Length: " + linea.toString().getBytes().length
-                            + "\r\nContent-Type: text/html; charset=utf-8"
-                            + "Server: ServidorWebPropio\r\n"
-                            + "Date: " + new Date()
-                            + "\r\n\r\n" + linea.toString() + "\r\n\r\n";
-
-                    conexionCliente.getOutputStream().write(httpResponse.getBytes("UTF-8"));
+                    line += "\\" + lineas[i];
                 }
-            //}
+                
+            }
+            
+            if(line.equals("")){
+                line = "index.html";
+            }
 
+            File file = new File("C:\\Users\\Dam\\Desktop" + line);
+            
+            System.out.println("C:\\Users\\Dam\\Desktop" + line);
+
+            if (file.exists()) {
+
+                Scanner scanner = new Scanner(file);
+                scanner.useDelimiter(",\\s*");
+
+                StringBuilder linea = new StringBuilder();
+                while (scanner.hasNextLine()) {
+                    linea.append(scanner.nextLine() + "\r\n");
+                }
+                
+                String tipoMime = "";
+                if(line.endsWith(".html")){
+                    tipoMime = "text/html";
+                } else if(line.endsWith(".css")){
+                    tipoMime = "text/css";
+                } else if(line.endsWith(".js")){
+                    tipoMime = "application/javascript";
+                } else if(line.endsWith(".jpg") || line.endsWith(".jpeg")){
+                    tipoMime = "image/jpeg";
+                } else if(line.endsWith(".png")){
+                    tipoMime = "image/png";
+                } else if(line.endsWith(".gif")){
+                    tipoMime = "image/gif";
+                } else if(line.endsWith(".pdf")){
+                    tipoMime = "application/pdf";
+                }
+                
+                String httpResponse
+                        = "HTTP/1.1 200 OK\r\n"
+                        + "Content-Length: " + linea.toString().getBytes().length
+                        + "\r\nContent-Type: " + tipoMime + "; charset=utf-8"
+                        + "Server: ServidorWebPropio\r\n"
+                        + "Date: " + new Date()
+                        + "\r\n\r\n" + linea.toString() + "\r\n\r\n";
+                
+                System.out.println(httpResponse);
+
+                flujoSalida.write(httpResponse.getBytes("UTF-8"));
+            } else {
+                String linea = "<h1>Error: 404</h1>";
+                String httpResponse
+                        = "HTTP/1.1 404 OK\r\n"
+                        + "Content-Length: " + linea.toString().getBytes().length
+                        + "\r\nContent-Type: text/html; charset=utf-8"
+                        + "Server: ServidorWebPropio\r\n"
+                        + "Date: " + new Date()
+                        + "\r\n\r\n" + linea.toString() + "\r\n\r\n";
+
+                conexionCliente.getOutputStream().write(httpResponse.getBytes("UTF-8"));
+            }
+            
+            entrada.close();
             flujoEntrada.close();
             flujoSalida.close();
             conexionCliente.close();
@@ -98,27 +126,5 @@ public class HiloServidorNavegador extends Thread {
             Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-    }
-    
-    public static String getHeaderToArray(InputStream inputStream) {
-
-        String headerTempData = "";
-
-        // chain the InputStream to a Reader
-        Reader reader = new InputStreamReader(inputStream);
-        try {
-            int c;
-            while ((c = reader.read()) != -1) {
-                //System.out.print((char) c);
-                headerTempData += (char) c;
-
-                if (headerTempData.contains("\r\n\r\n"))
-                    break;
-            }
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
-        }
-
-        return headerTempData;
     }
 }

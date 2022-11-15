@@ -61,7 +61,7 @@ public class HiloServidor extends Thread {
             if(urlCliente.contains("GET") && (urlCliente.contains("http://") || urlCliente.contains("https://"))){
                 
             
-                File file = new File("C:\\Users\\Nitro\\Desktop" + archivo);
+                File file = new File("C:\\Users\\Dam\\Desktop" + archivo);
                 
                 if(file.exists()){
                     
