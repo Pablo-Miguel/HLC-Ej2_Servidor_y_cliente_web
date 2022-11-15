@@ -47,7 +47,7 @@ public class HiloServidor extends Thread {
             
             
             //urlCliente = flujoEntrada.readLine();
-            urlCliente = flujoEntrada.readUTF();
+            urlCliente = flujoEntrada.readUTF().toLowerCase();
             
             String[] listaUrl = urlCliente.trim().split("/");
             
@@ -58,7 +58,7 @@ public class HiloServidor extends Thread {
             }
             
             
-            if(urlCliente.contains("GET") && (urlCliente.contains("http://") || urlCliente.contains("https://"))){
+            if(urlCliente.contains("get") && (urlCliente.contains("http://") || urlCliente.contains("https://"))){
                 
             
                 File file = new File("C:\\Users\\Dam\\Desktop" + archivo);
