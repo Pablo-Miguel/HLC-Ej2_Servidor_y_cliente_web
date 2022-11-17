@@ -104,6 +104,7 @@ public class HiloServidorNavegador extends Thread {
                 System.out.println(httpResponse);
 
                 flujoSalida.write(httpResponse.getBytes("UTF-8"));
+                flujoSalida.flush();
             } else {
                 String linea = "<h1>Error: 404</h1>";
                 String httpResponse
@@ -115,6 +116,7 @@ public class HiloServidorNavegador extends Thread {
                         + "\r\n\r\n" + linea.toString() + "\r\n\r\n";
 
                 conexionCliente.getOutputStream().write(httpResponse.getBytes("UTF-8"));
+                flujoSalida.flush();
             }
             
             reader.close();
